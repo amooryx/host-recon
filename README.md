@@ -4,9 +4,12 @@
 
 # host-recon
 
-> Local host situational-awareness collector for post-exploitation
+> Local host situational-awareness scaffold
 
-Part of a red-team tooling collection for **authorised** security testing.
+This repository currently contains a CLI scaffold, not a host-enumeration
+implementation. It prints the supplied target identifier and a status message;
+it does not inspect the local host, resolve or contact a target, or perform
+network activity.
 
 ## Install
 
@@ -27,11 +30,16 @@ python host_recon.py <target>
 | `-v, --verbose` | Verbose output |
 | `-y, --yes` | Skip the authorisation prompt |
 
+By default, the report is printed to standard output. `-o/--output` writes the
+report to a new UTF-8 text file; it refuses to overwrite an existing path and
+returns an error if the file cannot be created. No target activity occurs in
+either mode.
+
 ## Disclaimer
 
 > **Authorised security testing only.** Use this against systems you own or have
-> explicit written permission to test. The tool prompts for authorisation before
-> acting and is provided for professional engagements, labs, and research.
+> explicit written permission to test. The CLI prompts for authorisation unless
+> `-y` is supplied. This scaffold performs no testing or target interaction.
 
 ## Author
 

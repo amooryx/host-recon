@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""host-recon - Local host situational-awareness collector for post-exploitation
+"""host-recon - Local host situational-awareness scaffold
 
 Authorised security testing only. See README.
 """
@@ -7,13 +7,14 @@ from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
 
 TOOL = "host-recon"
-DESCRIPTION = "Local host situational-awareness collector for post-exploitation"
+DESCRIPTION = "Local host situational-awareness scaffold"
 
 
-def banner() -> None:
-    print(f"[ {TOOL} ] {DESCRIPTION}")
+def banner() -> str:
+    return f"[ {TOOL} ] {DESCRIPTION}"
 
 
 def authorised(assume_yes: bool) -> bool:
@@ -29,15 +30,27 @@ def authorised(assume_yes: bool) -> bool:
 
 
 def run(args: argparse.Namespace) -> int:
-    """Core routine.
+    """Report the selected scope without inspecting or contacting the target."""
+    report = "\n".join(
+        (
+            banner(),
+            f"[*] target : {args.target}",
+            f"[*] output : {args.output or '(stdout)'}",
+            "[*] scaffold ready - implement engagement-specific logic in run().",
+        )
+    ) + "\n"
+    if args.output is None:
+        print(report, end="")
+        return 0
 
-    This is a scaffold: it validates input, states scope, and defines the
-    workflow. Extend `run()` with the checks your engagement needs.
-    """
-    banner()
-    print(f"[*] target : {args.target}")
-    print(f"[*] output : {args.output or '(stdout)'}")
-    print("[*] scaffold ready - implement engagement-specific logic in run().")
+    try:
+        with Path(args.output).open("x", encoding="utf-8") as output_file:
+            output_file.write(report)
+    except OSError as exc:
+        print(f"[!] unable to write output file {args.output!r}: {exc}", file=sys.stderr)
+        return 1
+
+    print(f"[*] results written to {args.output}")
     return 0
 
 
